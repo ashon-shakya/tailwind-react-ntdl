@@ -8,6 +8,7 @@ const MAX_ALLOWED_HR = 168;
 const TaskManager = () => {
   const [taskList, setTaskList] = useState([]);
   const [firstPass, setFirstPass] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const [taskHours, setTaskHours] = useState({
     total: 0,
@@ -36,6 +37,15 @@ const TaskManager = () => {
       });
     }
   }, [taskList]);
+
+  // for setting dark theme
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
 
   // Calculate total hour
   const calculateTotalHr = () => {
@@ -99,10 +109,43 @@ const TaskManager = () => {
     );
   };
 
+  // Dark Mode Toggle
+  const toggleDarkMode = () => {
+    setIsDarkMode((prev) => !prev);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white p-6">
+    <div
+      data-theme="dark"
+      className="min-h-screen bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white p-6"
+    >
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-center my-12">Not To Do List</h1>
+
+        <div className="flex justify-end items-center mb-4">
+          <label
+            htmlFor="darkModeToggle"
+            className="flex items-center cursor-pointer"
+          >
+            <div className="relative">
+              {/* Hidden checkbox */}
+              <input
+                type="checkbox"
+                id="darkModeToggle"
+                className="sr-only" // sr-only makes it visually hidden but accessible
+                checked={isDarkMode}
+                onChange={toggleDarkMode}
+              />
+              {/* Track */}
+              <div className="block bg-gray-600 w-14 h-8 rounded-full"></div>
+              {/* Knob */}
+              <div className="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform dark:translate-x-full dark:bg-gray-300"></div>
+            </div>
+            <div className="ml-3 text-gray-700 dark:text-gray-300 font-medium">
+              {isDarkMode ? "Dark" : "Light"} Mode
+            </div>
+          </label>
+        </div>
 
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl mb-10">
           {/* Task Form */}

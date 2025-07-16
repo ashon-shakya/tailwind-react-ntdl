@@ -14,7 +14,7 @@ const TaskTable = ({ taskList, type, handleSwap, handleDelete }) => {
           taskList.map((t, i) => (
             <tr
               key={t.id}
-              className="border-b border-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300 hover:dark:text-gray-500 transition"
+              className="border-b border-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300 hover:dark:bg-gray-700 transition"
             >
               <td className="p-3 text-sm ">{i + 1}</td>
               <td className="p-3 text-sm ">{t.task}</td>
