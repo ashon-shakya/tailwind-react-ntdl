@@ -122,6 +122,7 @@ const TaskManager = () => {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-center my-12">Not To Do List</h1>
 
+        {/* toggle button */}
         <div className="flex justify-end items-center mb-4">
           <label
             htmlFor="darkModeToggle"
