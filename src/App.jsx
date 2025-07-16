@@ -7,6 +7,7 @@ const MAX_ALLOWED_HR = 168;
 
 const TaskManager = () => {
   const [taskList, setTaskList] = useState([]);
+  const [firstPass, setFirstPass] = useState(true);
 
   const [taskHours, setTaskHours] = useState({
     total: 0,
@@ -16,25 +17,30 @@ const TaskManager = () => {
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("taskList")) || [];
-    console.log(111, saved);
     if (saved) {
       setTaskList(saved);
     }
+
+    setFirstPass(false);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("taskList", JSON.stringify(taskList));
+    if (!firstPass) {
+      localStorage.setItem("taskList", JSON.stringify(taskList));
 
-    // update hours
-    setTaskHours({
-      total: calculateTotalHr().toFixed(1),
-      good: calculateGoodHr().toFixed(1),
-      bad: calculateBadHr().toFixed(1),
-    });
+      // update hours
+      setTaskHours({
+        total: calculateTotalHr().toFixed(1),
+        good: calculateGoodHr().toFixed(1),
+        bad: calculateBadHr().toFixed(1),
+      });
+    }
   }, [taskList]);
 
   // Calculate total hour
-  const calculateTotalHr = () => taskList.reduce((acc, t) => acc + t.hour, 0);
+  const calculateTotalHr = () => {
+    return taskList.reduce((acc, t) => acc + t.hour, 0);
+  };
 
   // Calculate bad hour
   const calculateBadHr = () => {
@@ -53,6 +59,7 @@ const TaskManager = () => {
   // Add Task
   const handleAddTask = (taskObj) => {
     const newHour = parseFloat(taskObj.hour);
+
     if (!taskObj.task.trim()) {
       return alert("Task is required");
     }
@@ -78,7 +85,9 @@ const TaskManager = () => {
   // Delete Task
   const handleDelete = (id) => {
     const confirmDelete = window.confirm("Are you sure?");
-    if (confirmDelete) setTaskList(taskList.filter((t) => t.id !== id));
+    if (confirmDelete) {
+      setTaskList(taskList.filter((t) => t.id !== id));
+    }
   };
 
   // Swap Task
@@ -91,40 +100,36 @@ const TaskManager = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <div className="min-h-screen bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white p-6">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-8">Not To Do List</h1>
+        <h1 className="text-4xl font-bold text-center my-12">Not To Do List</h1>
 
-        <div className="bg-gray-800 p-6 rounded-xl shadow-xl mb-10">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl mb-10">
           {/* Task Form */}
           <TaskForm handleAddTask={handleAddTask} />
         </div>
 
         {/* Task */}
         <div className="flex flex-col md:flex-row gap-6">
-          <div className="bg-gray-800 rounded-xl p-5 shadow-md w-full">
-            <TaskList
-              taskList={taskList.filter((t) => t.type == "good")}
-              type={"good"}
-              title={"Productive List"}
-              handleDelete={handleDelete}
-              handleSwap={handleSwap}
-              hour={taskHours.good}
-            />
-          </div>
-          <div className="bg-gray-800 rounded-xl p-5 shadow-md w-full">
-            <TaskList
-              taskList={taskList.filter((t) => t.type == "bad")}
-              type={"bad"}
-              title={"Unproductive List"}
-              handleDelete={handleDelete}
-              handleSwap={handleSwap}
-              hour={taskHours.bad}
-            />
-          </div>
+          <TaskList
+            taskList={taskList.filter((t) => t.type == "good")}
+            type={"good"}
+            title={"Productive List"}
+            handleDelete={handleDelete}
+            handleSwap={handleSwap}
+            hour={taskHours.good}
+          />
+          <TaskList
+            taskList={taskList.filter((t) => t.type == "bad")}
+            type={"bad"}
+            title={"Unproductive List"}
+            handleDelete={handleDelete}
+            handleSwap={handleSwap}
+            hour={taskHours.bad}
+          />
         </div>
 
-        <div className="mt-10 bg-amber-900 border border-amber-700 p-4 rounded text-amber-200 text-center">
+        <div className="mt-10 bg-amber-500 border border-amber-500 p-4 rounded text-amber-900 text-center">
           <strong>Total Time:</strong> {taskHours.total} hrs / {MAX_ALLOWED_HR}{" "}
           hrs
         </div>

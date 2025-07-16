@@ -14,13 +14,11 @@ const TaskTable = ({ taskList, type, handleSwap, handleDelete }) => {
           taskList.map((t, i) => (
             <tr
               key={t.id}
-              className="border-b border-gray-700 hover:bg-gray-700 transition"
+              className="border-b border-gray-700 hover:bg-gray-200 text-gray-700 dark:text-gray-300 hover:dark:text-gray-500 transition"
             >
-              <td className="p-3 text-sm text-gray-300">{i + 1}</td>
-              <td className="p-3 text-sm text-gray-300">{t.task}</td>
-              <td className="p-3 text-sm text-gray-300">
-                {t.hour.toFixed(1)} Hr
-              </td>
+              <td className="p-3 text-sm ">{i + 1}</td>
+              <td className="p-3 text-sm ">{t.task}</td>
+              <td className="p-3 text-sm ">{t.hour.toFixed(1)} Hr</td>
               <td className="p-3 text-right space-x-2">
                 {type == "good" ? (
                   <>
